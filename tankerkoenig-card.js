@@ -85,7 +85,7 @@ class TankerkoenigCard extends LitElement {
     }
 
     renderGasStationLogo(brand) {
-        iconSize = this.config.icon_size || 30;
+        let iconSize = this.config.icon_size || 30;
         if (brand) {
             return html`<td class="logo"><img height="${iconSize}" width="${iconSize}" src="/local/gasstation_logos/${brand.toLowerCase()}.png"></td>`;
         } else {

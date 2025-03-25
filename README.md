@@ -1,6 +1,6 @@
 ﻿# Tankerkoenig Lovelace Card
 
-[![Version](https://img.shields.io/badge/version-1.1.0-green?style=square)](#) [![mantained](https://img.shields.io/maintenance/yes/2025?style=square)](#) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange?style=square)](https://github.com/custom-components/hacs)
+[![Version](https://img.shields.io/badge/version-1.2.0-green?style=square)](#) [![mantained](https://img.shields.io/maintenance/yes/2025?style=square)](#) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange?style=square)](https://github.com/custom-components/hacs)
 
 [![maintainer](https://img.shields.io/badge/maintainer-Second2None-blue?style=square)](#)
 
