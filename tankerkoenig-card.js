@@ -12,47 +12,47 @@ class TankerkoenigCard extends LitElement {
             config: {}
         };
     }
-    
+
     render() {
         this.stations.sort((a, b) => {
             let key = '';
-            
-            if(a.diesel) {
+
+            if (a.diesel) {
                 key = 'diesel';
-            } else if(a.e5) {
+            } else if (a.e5) {
                 key = 'e5';
-            } else if(a.e10) {
+            } else if (a.e10) {
                 key = 'e10';
             }
-            
-            if(this.hass.states[a[key]].state === 'unknown' || this.hass.states[a[key]].state === 'unavailable') {
+
+            if (this.hass.states[a[key]].state === 'unknown' || this.hass.states[a[key]].state === 'unavailable') {
                 return 1;
             }
-            
-            if(this.hass.states[b[key]].state === 'unknown' || this.hass.states[b[key]].state === 'unavailable') {
+
+            if (this.hass.states[b[key]].state === 'unknown' || this.hass.states[b[key]].state === 'unavailable') {
                 return -1;
             }
-            
-            if(this.hass.states[a[key]].state > this.hass.states[b[key]].state) return 1;
-            if(this.hass.states[b[key]].state > this.hass.states[a[key]].state) return -1;
-            
+
+            if (this.hass.states[a[key]].state > this.hass.states[b[key]].state) return 1;
+            if (this.hass.states[b[key]].state > this.hass.states[a[key]].state) return -1;
+
             return 0;
         });
-        
+
         let header = '';
-        
-        if(this.show_header === true) {
+
+        if (this.show_header === true) {
             header = this.config.name || 'Tankerkönig';
         }
-        
+
         return html`<ha-card elevation="2" header="${header}">
             <div class="container">
                 <table width="100%">
                     ${this.stations.map((station) => {
-                    
-                        if(!this.isOpen(station) && this.config.show_closed !== true) return;
-                    
-                        return html`<tr>
+
+            if (!this.isOpen(station) && this.config.show_closed !== true) return;
+
+            return html`<tr>
                         
                         <td class="logo"><img height="40" width="40" src="/local/gasstation_logos/${station.brand.toLowerCase()}.png"></td>
                         <td class="name">${station.name}</td>
@@ -62,85 +62,93 @@ class TankerkoenigCard extends LitElement {
                         
                         
                         </tr>`;
-                    })}
+        })}
                 </table>
             </div>
         </ha-card>`;
     }
-    
+
     getStationState(station) {
         let state = null;
-        
-        if(this.has.e5) {
+
+        if (this.has.e5) {
             state = this.hass.states[station.e5] || null;
-        } else if(this.has.e10) {
+        } else if (this.has.e10) {
             state = this.hass.states[station.e10] || null;
-        } else if(this.has.diesel) {
+        } else if (this.has.diesel) {
             state = this.hass.states[station.diesel] || null;
         }
-        
+
         return state;
     }
-    
+
     isOpen(station) {
         const state = this.hass.states[station.state].state;
         return state == "on";
     }
-    
+
     renderPrice(station, type) {
-        if(!this.has[type]) {
+        // skip if not configured
+        if (!this.has[type]) {
             return;
         }
-        
+
         const state = this.hass.states[station[type]] || null;
-            
-        if(state && state.state != 'unknown' && state.state != 'unavailable' && this.isOpen(station)) {
+
+        // render gas info if station is open and has a price
+        if (state && state.state != 'unknown' && state.state != 'unavailable' && this.isOpen(station)) {
             return html`<td><ha-label-badge
               label="${type.toUpperCase()}"
               @click="${() => this.fireEvent('hass-more-info', station[type])}"
               ><span style="font-size: 75%;">${state.state}&euro;</span></ha-label-badge></td>`;
-        } else {
+        } else if (state && !this.isOpen(station)) { // render lock badge if station is open but has no price
             return html`<td><ha-label-badge
               icon="mdi:lock-outline"
               label="${type.toUpperCase()}"
               @click="${() => this.fireEvent('hass-more-info', station[type])}"
               ></ha-label-badge></td>`;
+        } else if (this.has[type] && !state) { // render placeholder if station has not a configured gas type
+            return html`<td><ha-label-badge style="display: none;"
+              label="${type.toUpperCase()}"
+              ><span style="font-size: 75%;">N/A</span></ha-label-badge></td>`;
+        } else {
+            return;
         }
     }
-    
+
     fireEvent(type, entityId, options = {}) {
-          const event = new Event(type, {
-              bubbles: options.bubbles || true,
-              cancelable: options.cancelable || true,
-              composed: options.composed || true,
-          });
-          event.detail = {entityId: entityId};
-          this.dispatchEvent(event);
-      }
-    
+        const event = new Event(type, {
+            bubbles: options.bubbles || true,
+            cancelable: options.cancelable || true,
+            composed: options.composed || true,
+        });
+        event.detail = { entityId: entityId };
+        this.dispatchEvent(event);
+    }
+
     setConfig(config) {
         this.config = config;
-        
-        if(this.config.show_header !== false) {
+
+        if (this.config.show_header !== false) {
             this.show_header = true;
         } else {
             this.show_header = false;
         }
-        
+
         this.has = {
             e5: this.config.show.indexOf('e5') !== -1,
             e10: this.config.show.indexOf('e10') !== -1,
             diesel: this.config.show.indexOf('diesel') !== -1,
         };
-        
-        
+
+
         this.stations = this.config.stations.slice();
     }
-    
+
     getCardSize() {
         return this.stations.length + 1;
     }
-    
+
     static get styles() {
         return css`
             .container { padding: 0 16px 16px; }
