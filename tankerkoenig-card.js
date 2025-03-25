@@ -110,7 +110,7 @@ class TankerkoenigCard extends LitElement {
             return;
         }
 
-        return html`<th><ha-label-badge class=${(sortingKey === type) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" ></ha-label-badge></th>`;
+        return html`<th><ha-label-badge class="${(sortingKey === type) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" ></ha-label-badge></th>`;
     }
 
     renderGasStationLogo(brand) {
@@ -218,11 +218,11 @@ class TankerkoenigCard extends LitElement {
             td.gasstation img { vertical-align: middle; }
             ha-label-badge { font-size: 85%; cursor: pointer; }
             .label-badge .value { font-size: 70%; }
-            ha-label-badge .label-badge { border: none; background: none; height: 0; }
-            ha-label-badge .label-badge .value { display: none; }
-            ha-label-badge .label-badge .label { bottom: 0; left: 0; right: 0; }
-            ha-label-badge .label-badge .label { background: var(--disabled-text-color); color: white; }
-            ha-label-badge.active .label-badge .label { background: var(--primary-color); color: white; }
+            .label-badge { border: none; background: none; height: 0; }
+            .label-badge .value { display: none; }
+            .label-badge .label { bottom: 0; left: 0; right: 0; }
+            .label-badge .label { background: var(--disabled-text-color); color: white; }
+            .active .label-badge .label { background: var(--primary-color); color: white; }
         `;
     }
 }
