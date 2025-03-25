@@ -34,11 +34,12 @@ class TankerkoenigCard extends LitElement {
         let sortingKey = this.getSortingKey(sortBy);
 
         this.stations.sort((a, b) => {
-            
+            if (typeof this.hass.states[a[sortingKey]] === 'undefined') return 0;
             if (this.hass.states[a[sortingKey]].state === 'unknown' || this.hass.states[a[sortingKey]].state === 'unavailable') {
                 return 1;
             }
 
+            if (typeof this.hass.states[b[sortingKey]] === 'undefined') return 0;
             if (this.hass.states[b[sortingKey]].state === 'unknown' || this.hass.states[b[sortingKey]].state === 'unavailable') {
                 return -1;
             }
@@ -102,10 +103,12 @@ class TankerkoenigCard extends LitElement {
     }
 
     renderSortingHeader(sortingKey) {
+        let thHtml = '';
         for (var type in this.has) {
-            return html`<th><ha-label-badge class="${(type === sortingKey) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" >
-            </ha-label-badge></th>`;
+            let className = (sortingKey === type) ? 'active' : '';
+            thHtml += '<th><ha-label-badge class="' + className + '" label="' + type.toUpperCase() + '" @click="${() => this.render(type)}" ></ha-label-badge></th>';
         };
+        return html`${thHtml}`;
     }
 
     renderGasStationLogo(brand) {
