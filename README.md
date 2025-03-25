@@ -25,6 +25,7 @@ views:
         round_gas_prices: false
         render_sup: true
         icon_size: 30
+        sort_by_gas: diesel
         stations:
           - name: Kölner Str.
             brand: ARAL
@@ -42,13 +43,14 @@ views:
 | key           | values            | required | description
 |---------------|-------------------|----------|---
 | `name`        | String            | yes      | Name of the card that should be shown in the frontend
-| `show`        | [e5, e10, diesel] | yes      | What should be shown
+| `show`        | [e5, e10, diesel] | false      | What should be shown (default: e5, e10, diesel)
 | `show_closed` | Boolean           | no       | Show closed stations (default: false)
 | `show_header` | Boolean           | no       | Show card-header (default: true)
 | `stations`    | List of stations  | yes      | List of stations
 | `round_gas_prices` | Boolean      | no       | Round the gas prices to 2 decimal places (default: false)
 | `render_sup`  | Boolean           | no       | Use the `<sup>` tag to render the last digit of gas prices (default: false, e.g. 1,59<sup>9</sup>&euro;). Ignored if `round_gas_prices` is set to `true`.
 | `icon_size`   | Integer           | no       | Size of the icon (default: 30)
+| `sort_by_gas`     | [e5, e10, diesel] | no       | Sort the stations by the given gas type (default: e5)
 
 #### Stations
 | key      | value  | required | description

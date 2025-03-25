@@ -13,28 +13,38 @@ class TankerkoenigCard extends LitElement {
         };
     }
 
-    render() {
+    getSortingKey(sortBy) {
+        let key = '';
+
+        if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy === 'undefined') { // if sorting is not defined in configuration and sortBy is not set, default to e5
+            key = 'e5';
+        } else if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy !== 'undefined') { // if sorting is not defined in configuration but sortBy is set, use sortBy
+            key = sortBy;
+        } else if (typeof this.config.sort_by_gas !== 'undefined' && typeof sortBy === 'undefined') { // if sorting is defined in configuration but sortBy is not set, use configuration
+            key = this.config.sort_by_gas;
+        } else if (typeof this.config.sort_by_gas !== 'undefined' && typeof sortBy !== 'undefined') { // if sorting is defined in configuration and sortBy is set, use sortBy
+            key = sortBy;
+        } else { // fallback to default
+            key = 'e5';
+        }
+        return key;
+    }
+
+    render(sortBy) {
+        let sortingKey = this.getSortingKey(sortBy);
+
         this.stations.sort((a, b) => {
-            let key = '';
-
-            if (a.diesel) {
-                key = 'diesel';
-            } else if (a.e5) {
-                key = 'e5';
-            } else if (a.e10) {
-                key = 'e10';
-            }
-
-            if (this.hass.states[a[key]].state === 'unknown' || this.hass.states[a[key]].state === 'unavailable') {
+            
+            if (this.hass.states[a[sortingKey]].state === 'unknown' || this.hass.states[a[sortingKey]].state === 'unavailable') {
                 return 1;
             }
 
-            if (this.hass.states[b[key]].state === 'unknown' || this.hass.states[b[key]].state === 'unavailable') {
+            if (this.hass.states[b[sortingKey]].state === 'unknown' || this.hass.states[b[sortingKey]].state === 'unavailable') {
                 return -1;
             }
 
-            if (this.hass.states[a[key]].state > this.hass.states[b[key]].state) return 1;
-            if (this.hass.states[b[key]].state > this.hass.states[a[key]].state) return -1;
+            if (this.hass.states[a[sortingKey]].state > this.hass.states[b[sortingKey]].state) return 1;
+            if (this.hass.states[b[sortingKey]].state > this.hass.states[a[sortingKey]].state) return -1;
 
             return 0;
         });
@@ -48,17 +58,24 @@ class TankerkoenigCard extends LitElement {
         return html`<ha-card elevation="2" header="${header}">
             <div class="container">
                 <table width="100%">
+                    <thead>
+                        <tr>
+                            <th class="thead-icon"></th>
+                            <th class="thead-station"></th>
+                            ${this.renderSortingHeader(sortingKey)}
+                        </tr>
+                    </thead>
                     ${this.stations.map((station) => {
 
-            if (!this.isOpen(station) && this.config.show_closed !== true) return;
+                    if (!this.isOpen(station) && this.config.show_closed !== true) return;
 
-            return html`<tr>
-                        ${this.renderGasStationLogo(station.brand)}
-                        <td class="name">${station.name}</td>
-                        ${this.renderPrice(station, 'e5')}
-                        ${this.renderPrice(station, 'e10')}
-                        ${this.renderPrice(station, 'diesel')}
-                        </tr>`;
+                    return html`<tr>
+                                ${this.renderGasStationLogo(station.brand)}
+                                <td class="name">${station.name}</td>
+                                ${this.renderPrice(station, 'e5')}
+                                ${this.renderPrice(station, 'e10')}
+                                ${this.renderPrice(station, 'diesel')}
+                                </tr>`;
         })}
                 </table>
             </div>
@@ -82,6 +99,13 @@ class TankerkoenigCard extends LitElement {
     isOpen(station) {
         const state = this.hass.states[station.state].state;
         return state == "on";
+    }
+
+    renderSortingHeader(sortingKey) {
+        for (var type in this.has) {
+            return html`<th><ha-label-badge class="${(type === sortingKey) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" >
+            </ha-label-badge></th>`;
+        };
     }
 
     renderGasStationLogo(brand) {
@@ -138,12 +162,21 @@ class TankerkoenigCard extends LitElement {
         // set header visibility
         this.show_header = (this.config.show_header !== false) ? true : false;
 
-        // set gas types visibility
-        this.has = {
-            e5: this.config.show.indexOf('e5') !== -1,
-            e10: this.config.show.indexOf('e10') !== -1,
-            diesel: this.config.show.indexOf('diesel') !== -1,
-        };
+        if (typeof this.config.show !== 'undefined') {
+            // set gas types visibility by configuration
+            this.has = {
+                e5: this.config.show.indexOf('e5') !== -1,
+                e10: this.config.show.indexOf('e10') !== -1,
+                diesel: this.config.show.indexOf('diesel') !== -1,
+            };
+        } else {
+            // set gas types visibility by default to all
+            this.has = {
+                e5: true,
+                e10: true,
+                diesel: true,
+            };
+        }
 
         // set stations
         this.stations = this.config.stations.slice();
@@ -180,6 +213,11 @@ class TankerkoenigCard extends LitElement {
             td.gasstation img { vertical-align: middle; }
             ha-label-badge { font-size: 85%; cursor: pointer; }
             .label-badge .value { font-size: 70%; }
+            ha-label-badge .label-badge { border: none; background: none; height: 0; }
+            ha-label-badge .label-badge .value { display: none; }
+            ha-label-badge .label-badge .label { bottom: 0; left: 0; right: 0; }
+            ha-label-badge .label-badge .label { background: var(--disabled-text-color); color: white; }
+            ha-label-badge.active .label-badge .label { background: var(--primary-color); color: white; }
         `;
     }
 }
