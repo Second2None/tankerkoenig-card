@@ -22,6 +22,9 @@ views:
           - e10
         show_closed: true
         show_header: false
+        round_gas_prices: false
+        render_sup: true
+        icon_size: 30
         stations:
           - name: Kölner Str.
             brand: ARAL
@@ -43,12 +46,15 @@ views:
 | `show_closed` | Boolean           | no       | Show closed stations (default: false)
 | `show_header` | Boolean           | no       | Show card-header (default: true)
 | `stations`    | List of stations  | yes      | List of stations
+| `round_gas_prices` | Boolean      | no       | Round the gas prices to 2 decimal places (default: false)
+| `render_sup`  | Boolean           | no       | Use the `<sup>` tag to render the last digit of gas prices (default: false, e.g. 1,59<sup>9</sup>&euro;). Ignored if `round_gas_prices` is set to `true`.
+| `icon_size`   | Integer           | no       | Size of the icon (default: 30)
 
 #### Stations
 | key      | value  | required | description
 |----------|--------|----------|---
 | `name`   | String | yes      | The name of the station (for example the street)
-| `brand`  | String | yes      | The brand of the station used for the icon
+| `brand`  | String | no       | The brand of the station used for the icon
 | `e5`     | Sensor | no*      | Sensor for the E5 price
 | `e10`    | Sensor | no*      | Sensor for the E10 price
 | `diesel` | Sensor | no*      | Sensor for the diesel price
@@ -60,6 +66,4 @@ views:
 To use the icons you have to use lowercase names, which has to be the same as in the `brand` settings. The icons must be in `*.png` format.
 
 ### Example
-For the brand ARAL there has to be an icon with the following path:
-
-`/www/gasstation_logos/aral.png`
+For the brand ARAL there has to be an icon with the following path: `/www/gasstation_logos/aral.png`
