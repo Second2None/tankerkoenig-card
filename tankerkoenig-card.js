@@ -166,7 +166,7 @@ class TankerkoenigCard extends LitElement {
         }
 
         if (this.config.render_sup !== false && gasPrice.length >= 5) {
-            return html`${state.state.substring(0, gasPrice.length - 1)}<sup>${state.state.substring(gasPrice.length - 2, gasPrice.length - 1)}</sup>&euro;`;
+            return html`${gasPrice.substring(0, gasPrice.length - 1)}<sup>${gasPrice.substring(gasPrice.length - 1, gasPrice.length)}</sup>&euro;`;
         } 
 
         return html`${gasPrice}&euro;`;
