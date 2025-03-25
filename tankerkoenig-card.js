@@ -63,7 +63,9 @@ class TankerkoenigCard extends LitElement {
                         <tr>
                             <th class="thead-icon"></th>
                             <th class="thead-station"></th>
-                            ${this.renderSortingHeader(sortingKey)}
+                            ${this.renderSortingHeader(sortingKey, 'e5')}
+                            ${this.renderSortingHeader(sortingKey, 'e10')}
+                            ${this.renderSortingHeader(sortingKey, 'diesel')}
                         </tr>
                     </thead>
                     ${this.stations.map((station) => {
@@ -102,13 +104,13 @@ class TankerkoenigCard extends LitElement {
         return state == "on";
     }
 
-    renderSortingHeader(sortingKey) {
-        let thHtml = '';
-        for (var type in this.has) {
-            let className = (sortingKey === type) ? 'active' : '';
-            thHtml += '<th><ha-label-badge class="' + className + '" label="' + type.toUpperCase() + '" @click="${() => this.render(type)}" ></ha-label-badge></th>';
-        };
-        return html`${thHtml}`;
+    renderSortingHeader(sortingKey, type) {
+        // skip if not configured
+        if (!this.has[type]) {
+            return;
+        }
+
+        return html`<th><ha-label-badge class=${(sortingKey === type) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" ></ha-label-badge></th>`;
     }
 
     renderGasStationLogo(brand) {
