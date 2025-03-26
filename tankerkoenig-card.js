@@ -219,6 +219,8 @@ class TankerkoenigCard extends LitElement {
             .label-badge .label { bottom: 0; left: 0; right: 0; }
             .label-badge .label { background: var(--disabled-text-color); color: white; }
             .active .label-badge .label { background: var(--primary-color); color: white; }
+            div.badge.no-icon { position: relative; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; height: var(--ha-badge-size, 36px); min-width: var(--ha-badge-size, 36px); padding: 0px 8px; box-sizing: border-box; width: auto; border-radius: var(--ha-badge-border-radius, calc(var(--ha-badge-size, 36px) / 2)); background: var(--ha-card-background, var(--card-background-color, white)); border-width: var(--ha-card-border-width, 1px); box-shadow: var(--ha-card-box-shadow, none); border-style: solid; border-color: var(--ha-card-border-color, var(--divider-color, #e0e0e0)); text-align: center; }
+            div.active.badge.no-icon { background-color: --primary-color; border-color: --dark-primary-color; }
         `;
     }
 }
