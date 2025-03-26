@@ -12,7 +12,7 @@ class TankerkoenigCard extends LitElement {
             config: {},
             sortBy: 'e5'
         };
-    } 
+    }
 
     changeSortingKey(sortBy) {
         if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy === 'undefined') { // if sorting is not defined in configuration and sortBy is not set, default to e5
