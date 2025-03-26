@@ -32,18 +32,18 @@ class TankerkoenigCard extends LitElement {
         this.changeSortingKey(sortBy);
 
         this.stations.sort((a, b) => {
-            if (typeof this.hass.states[a[sortingKey]] === 'undefined') return 0;
-            if (this.hass.states[a[sortingKey]].state === 'unknown' || this.hass.states[a[sortingKey]].state === 'unavailable') {
+            if (typeof this.hass.states[a[this.sortBy]] === 'undefined') return 0;
+            if (this.hass.states[a[this.sortBy]].state === 'unknown' || this.hass.states[a[this.sortBy]].state === 'unavailable') {
                 return 1;
             }
 
-            if (typeof this.hass.states[b[sortingKey]] === 'undefined') return 0;
-            if (this.hass.states[b[sortingKey]].state === 'unknown' || this.hass.states[b[sortingKey]].state === 'unavailable') {
+            if (typeof this.hass.states[b[this.sortBy]] === 'undefined') return 0;
+            if (this.hass.states[b[this.sortBy]].state === 'unknown' || this.hass.states[b[this.sortBy]].state === 'unavailable') {
                 return -1;
             }
 
-            if (this.hass.states[a[sortingKey]].state > this.hass.states[b[sortingKey]].state) return 1;
-            if (this.hass.states[b[sortingKey]].state > this.hass.states[a[sortingKey]].state) return -1;
+            if (this.hass.states[a[this.sortBy]].state > this.hass.states[b[this.sortBy]].state) return 1;
+            if (this.hass.states[b[this.sortBy]].state > this.hass.states[a[this.sortBy]].state) return -1;
 
             return 0;
         });
@@ -61,9 +61,9 @@ class TankerkoenigCard extends LitElement {
                         <tr>
                             <th class="thead-icon"></th>
                             <th class="thead-station"></th>
-                            ${this.renderSortingHeader(sortingKey, 'e5')}
-                            ${this.renderSortingHeader(sortingKey, 'e10')}
-                            ${this.renderSortingHeader(sortingKey, 'diesel')}
+                            ${this.renderSortingHeader(this.sortBy, 'e5')}
+                            ${this.renderSortingHeader(this.sortBy, 'e10')}
+                            ${this.renderSortingHeader(this.sortBy, 'diesel')}
                         </tr>
                     </thead>
                     ${this.stations.map((station) => {
