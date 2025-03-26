@@ -3,7 +3,7 @@ import {
     html,
     css,
     property
-} from "https://unpkg.com/lit-element@4.1.1/lit-element.js?module"; //"https://unpkg.com/lit-element@2.3.1/lit-element.js?module"; 
+} from "https://unpkg.com/lit-element@2.4.0/lit-element.js?module"; //"https://unpkg.com/lit-element@2.3.1/lit-element.js?module"; 
 
 class TankerkoenigCard extends LitElement {
     static get properties() {
