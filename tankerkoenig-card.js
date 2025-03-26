@@ -9,29 +9,27 @@ class TankerkoenigCard extends LitElement {
     static get properties() {
         return {
             hass: {},
-            config: {}
+            config: {},
+            sortBy: 'e5'
         };
     }
 
-    getSortingKey(sortBy) {
-        let key = '';
-
+    changeSortingKey(sortBy) {
         if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy === 'undefined') { // if sorting is not defined in configuration and sortBy is not set, default to e5
-            key = 'e5';
+            // nothing to do
         } else if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy !== 'undefined') { // if sorting is not defined in configuration but sortBy is set, use sortBy
-            key = sortBy;
+            this.sortBy = sortBy;
         } else if (typeof this.config.sort_by_gas !== 'undefined' && typeof sortBy === 'undefined') { // if sorting is defined in configuration but sortBy is not set, use configuration
-            key = this.config.sort_by_gas;
+            this.sortBy = this.config.sort_by_gas;
         } else if (typeof this.config.sort_by_gas !== 'undefined' && typeof sortBy !== 'undefined') { // if sorting is defined in configuration and sortBy is set, use sortBy
-            key = sortBy;
+            this.sortBy = sortBy;
         } else { // fallback to default
-            key = 'e5';
+            this.sortBy = 'e5';
         }
-        return key;
     }
 
     render(sortBy) {
-        let sortingKey = this.getSortingKey(sortBy);
+        this.changeSortingKey(sortBy);
 
         this.stations.sort((a, b) => {
             if (typeof this.hass.states[a[sortingKey]] === 'undefined') return 0;
