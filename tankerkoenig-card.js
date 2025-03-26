@@ -49,7 +49,6 @@ class TankerkoenigCard extends LitElement {
         });
 
         let header = '';
-
         if (this.show_header === true) {
             header = this.config.name || 'Tankerkönig';
         }
