@@ -106,8 +106,7 @@ class TankerkoenigCard extends LitElement {
         if (!this.has[type]) {
             return;
         }
-
-        return html`<th><ha-label-badge class="${(sortingKey === type) ? 'active' : ''}" label="${type.toUpperCase()}" @click="${() => this.render(type)}" ></ha-label-badge></th>`;
+        return html`<th><div class="badge no-icon ${(sortingKey === type) ? 'active' : ''}"><span class="info"><span class="content" @click="${() => this.render(type)}">${type.toUpperCase()}</span></span></div></th>`;
     }
 
     renderGasStationLogo(brand) {
