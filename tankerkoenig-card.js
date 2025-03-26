@@ -12,7 +12,7 @@ class TankerkoenigCard extends LitElement {
             config: {},
             sortBy: 'e5'
         };
-    }
+    } 
 
     changeSortingKey(sortBy) {
         if (typeof this.config.sort_by_gas === 'undefined' && typeof sortBy === 'undefined') { // if sorting is not defined in configuration and sortBy is not set, default to e5
@@ -60,9 +60,9 @@ class TankerkoenigCard extends LitElement {
                         <tr>
                             <th class="thead-icon"></th>
                             <th class="thead-station"></th>
-                            ${this.renderSortingHeader(this.sortBy, 'e5')}
-                            ${this.renderSortingHeader(this.sortBy, 'e10')}
-                            ${this.renderSortingHeader(this.sortBy, 'diesel')}
+                            ${this.renderSortingHeader('e5')}
+                            ${this.renderSortingHeader('e10')}
+                            ${this.renderSortingHeader('diesel')}
                         </tr>
                     </thead>
                     ${this.stations.map((station) => {
@@ -101,12 +101,12 @@ class TankerkoenigCard extends LitElement {
         return state == "on";
     }
 
-    renderSortingHeader(sortingKey, type) {
+    renderSortingHeader(type) {
         // skip if not configured
         if (!this.has[type]) {
             return;
         }
-        return html`<th><div class="badge no-icon ${(sortingKey === type) ? 'active' : ''}"><span class="info"><span class="content" @click="${() => this.render(type)}">${type.toUpperCase()}</span></span></div></th>`;
+        return html`<th><div class="badge no-icon ${(this.sortBy === type) ? 'active' : ''}"><span class="info"><span class="content" @click="${() => this.render(type)}">${type.toUpperCase()}</span></span></div></th>`;
     }
 
     renderGasStationLogo(brand) {
